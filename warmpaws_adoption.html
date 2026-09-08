@@ -1,11 +1,17 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WarmPaws Adoption</title>
+
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
     <script>
         tailwind.config = {
             theme: {
@@ -15,32 +21,34 @@
                             50: '#fff7ed',
                             100: '#ffedd5',
                             500: '#f97316',
-                            600: '#ea580c',
+                            600: '#ea580c'
                         }
                     }
                 }
             }
-        }
+        };
     </script>
+
     <style>
         body {
-            /* If the GitHub link isn't set up yet, it falls back to this soft gradient */
             background-color: #ffedd5;
-            background-image: url('https://raw.githubusercontent.com/YOUR_USERNAME/YOUR_REPOSITORY/main/warmpawsmainbackground.png'), linear-gradient(135deg, #fff7ed 0%, #ffedd5 50%, #fbcfe8 100%);
+            background-image:
+                linear-gradient(135deg, rgba(255, 247, 237, 0.92) 0%, rgba(255, 237, 213, 0.88) 50%, rgba(251, 207, 232, 0.82) 100%),
+                url("https://raw.githubusercontent.com/arryazua-maker/warmpaws/main/warmpawsmainbackground.png");
             background-size: cover;
             background-position: center top;
             background-attachment: fixed;
             background-repeat: no-repeat;
         }
-        
+
         .glass-panel {
-            background-color: rgba(255, 255, 255, 0.6) !important;
+            background-color: rgba(255, 255, 255, 0.60);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
         }
-        
+
         .pet-card {
-            background-color: rgba(255, 255, 255, 0.85) !important;
+            background-color: rgba(255, 255, 255, 0.85);
             backdrop-filter: blur(8px);
             -webkit-backdrop-filter: blur(8px);
             transition: all 0.3s ease;
@@ -48,11 +56,50 @@
 
         .pet-card:hover {
             transform: translateY(-4px);
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.10),
+                        0 8px 10px -6px rgba(0, 0, 0, 0.10);
         }
 
-        .badge-dog { background-color: #dbeafe; color: #1e40af; }
-        .badge-cat { background-color: #fce7f3; color: #be185d; }
+        .badge-dog {
+            background-color: #dbeafe;
+            color: #1e40af;
+        }
+
+        .badge-cat {
+            background-color: #fce7f3;
+            color: #be185d;
+        }
+
+        .progress-bar-bg {
+            background-color: #e5e7eb;
+            border-radius: 9999px;
+            height: 8px;
+            width: 100%;
+            overflow: hidden;
+            margin-top: 4px;
+        }
+
+        .progress-bar-fill-treatment {
+            background-color: #f59e0b;
+            height: 100%;
+            width: 40%;
+        }
+
+        .progress-bar-fill-neutered {
+            background-color: #3b82f6;
+            height: 100%;
+            width: 75%;
+        }
+
+        .progress-bar-fill-ready {
+            background-color: #10b981;
+            height: 100%;
+            width: 100%;
+        }
+
+        .modal-open {
+            overflow: hidden;
+        }
     </style>
 </head>
 
@@ -61,183 +108,494 @@
     <!-- Hero Section -->
     <section class="glass-panel py-12 border-b border-brand-100/50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h1 class="text-4xl font-extrabold text-gray-900 sm:text-5xl">Meet Our Rescued Strays</h1>
-            <p class="mt-4 text-xl text-gray-700 max-w-2xl mx-auto">Open your heart and home to a furry friend. Every adoption saves a life and brings unconditional love to yours.</p>
+            <h1 class="text-4xl font-extrabold text-gray-900 sm:text-5xl">
+                Meet Our Rescued Strays
+            </h1>
+
+            <p class="mt-4 text-xl text-gray-700 max-w-2xl mx-auto">
+                Open your heart and home to a furry friend. Every adoption saves a life
+                and brings unconditional love to yours.
+            </p>
         </div>
     </section>
 
-    <!-- Main Content: Adoption Table (3x3 Grid) -->
+    <!-- Main Content -->
     <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 w-full">
-        
+
         <!-- Category Filter Buttons -->
-        <div class="flex justify-center gap-4 mb-10">
-            <button onclick="filterPets('all')" id="filter-all" class="px-6 py-2 rounded-full font-bold bg-brand-500 text-white shadow-md transition">All Pets</button>
-            <button onclick="filterPets('dog')" id="filter-dog" class="px-6 py-2 rounded-full font-bold bg-white text-gray-700 hover:bg-brand-50 shadow-md transition">Dogs</button>
-            <button onclick="filterPets('cat')" id="filter-cat" class="px-6 py-2 rounded-full font-bold bg-white text-gray-700 hover:bg-brand-50 shadow-md transition">Cats</button>
+        <div class="flex flex-wrap justify-center gap-4 mb-10">
+            <button
+                onclick="filterPets('all')"
+                id="filter-all"
+                class="px-6 py-2 rounded-full font-bold bg-brand-500 text-white shadow-md transition">
+                All Pets
+            </button>
+
+            <button
+                onclick="filterPets('dog')"
+                id="filter-dog"
+                class="px-6 py-2 rounded-full font-bold bg-white text-gray-700 hover:bg-brand-50 shadow-md transition">
+                Dogs
+            </button>
+
+            <button
+                onclick="filterPets('cat')"
+                id="filter-cat"
+                class="px-6 py-2 rounded-full font-bold bg-white text-gray-700 hover:bg-brand-50 shadow-md transition">
+                Cats
+            </button>
         </div>
 
+        <!-- Pet Grid -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            
-            <!-- Pet Card 1 -->
-            <div class="pet-card pet-item rounded-2xl overflow-hidden border border-white/50 shadow-sm" data-category="dog">
-                <img src="https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&w=600&q=80" alt="Dog looking cute" class="w-full h-56 object-cover">
+
+            <!-- Bella -->
+            <div class="pet-card pet-item rounded-2xl overflow-hidden border border-white/50 shadow-sm relative" data-category="dog">
+                <span class="absolute top-4 right-4 bg-black/40 text-white text-[10px] font-mono px-2 py-1 rounded-md backdrop-blur-sm shadow-sm z-10">
+                    #dog0001
+                </span>
+
+                <img
+                    src="https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&w=600&q=80"
+                    alt="Bella, Golden Retriever Mix"
+                    class="w-full h-56 object-cover">
+
                 <div class="p-6">
                     <div class="flex justify-between items-start mb-4">
                         <h3 class="text-2xl font-bold text-gray-900">Bella</h3>
+
                         <span class="badge-dog px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider inline-flex items-center">
                             <i class="fas fa-dog mr-1"></i> Dog
                         </span>
                     </div>
-                    <div class="space-y-2 text-gray-600 text-sm">
-                        <p><i class="fas fa-dna w-5 text-gray-400"></i> <strong class="text-gray-700">Breed:</strong> Golden Retriever Mix</p>
-                        <p><i class="fas fa-birthday-cake w-5 text-gray-400"></i> <strong class="text-gray-700">Age:</strong> 2 Years</p>
+
+                    <div class="space-y-2 text-gray-600 text-sm mb-4">
+                        <p>
+                            <i class="fas fa-dna w-5 text-gray-400"></i>
+                            <strong class="text-gray-700">Breed:</strong> Golden Retriever Mix
+                        </p>
+                        <p>
+                            <i class="fas fa-birthday-cake w-5 text-gray-400"></i>
+                            <strong class="text-gray-700">Age:</strong> 2 Years
+                        </p>
                     </div>
-                    <!-- ADDED ONCLICK EVENT HERE -->
-                    <button onclick="openModal('Bella', 'Golden Retriever Mix')" class="mt-6 w-full bg-brand-500 hover:bg-brand-600 text-white font-bold py-2.5 px-4 rounded-xl transition duration-200">Meet Bella</button>
+
+                    <div class="mb-4">
+                        <div class="flex justify-between text-xs font-semibold text-gray-600 mb-1">
+                            <span>Status</span>
+                            <span class="text-emerald-600">Open for Adoption</span>
+                        </div>
+
+                        <div class="progress-bar-bg">
+                            <div class="progress-bar-fill-ready"></div>
+                        </div>
+                    </div>
+
+                    <button
+                        onclick="openModal('Bella', 'Golden Retriever Mix')"
+                        class="mt-2 w-full bg-brand-500 hover:bg-brand-600 text-white font-bold py-2.5 px-4 rounded-xl transition duration-200">
+                        Meet Bella
+                    </button>
                 </div>
             </div>
 
-            <!-- Pet Card 2 -->
-            <div class="pet-card pet-item rounded-2xl overflow-hidden border border-white/50 shadow-sm" data-category="cat">
-                <img src="https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?auto=format&fit=crop&w=600&q=80" alt="Cat looking curious" class="w-full h-56 object-cover">
+            <!-- Luna -->
+            <div class="pet-card pet-item rounded-2xl overflow-hidden border border-white/50 shadow-sm relative" data-category="cat">
+                <span class="absolute top-4 right-4 bg-black/40 text-white text-[10px] font-mono px-2 py-1 rounded-md backdrop-blur-sm shadow-sm z-10">
+                    #cat0001
+                </span>
+
+                <img
+                    src="https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?auto=format&fit=crop&w=600&q=80"
+                    alt="Luna, Domestic Shorthair"
+                    class="w-full h-56 object-cover">
+
                 <div class="p-6">
                     <div class="flex justify-between items-start mb-4">
                         <h3 class="text-2xl font-bold text-gray-900">Luna</h3>
+
                         <span class="badge-cat px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider inline-flex items-center">
                             <i class="fas fa-cat mr-1"></i> Cat
                         </span>
                     </div>
-                    <div class="space-y-2 text-gray-600 text-sm">
-                        <p><i class="fas fa-dna w-5 text-gray-400"></i> <strong class="text-gray-700">Breed:</strong> Domestic Shorthair</p>
-                        <p><i class="fas fa-birthday-cake w-5 text-gray-400"></i> <strong class="text-gray-700">Age:</strong> 1 Year</p>
+
+                    <div class="space-y-2 text-gray-600 text-sm mb-4">
+                        <p>
+                            <i class="fas fa-dna w-5 text-gray-400"></i>
+                            <strong class="text-gray-700">Breed:</strong> Domestic Shorthair
+                        </p>
+                        <p>
+                            <i class="fas fa-birthday-cake w-5 text-gray-400"></i>
+                            <strong class="text-gray-700">Age:</strong> 1 Year
+                        </p>
                     </div>
-                    <button onclick="openModal('Luna', 'Domestic Shorthair')" class="mt-6 w-full bg-brand-500 hover:bg-brand-600 text-white font-bold py-2.5 px-4 rounded-xl transition duration-200">Meet Luna</button>
+
+                    <div class="mb-4">
+                        <div class="flex justify-between text-xs font-semibold text-gray-600 mb-1">
+                            <span>Status</span>
+                            <span class="text-amber-600">Under Treatment</span>
+                        </div>
+
+                        <div class="progress-bar-bg">
+                            <div class="progress-bar-fill-treatment"></div>
+                        </div>
+                    </div>
+
+                    <button
+                        onclick="openModal('Luna', 'Domestic Shorthair')"
+                        class="mt-2 w-full bg-brand-500 hover:bg-brand-600 text-white font-bold py-2.5 px-4 rounded-xl transition duration-200">
+                        Meet Luna
+                    </button>
                 </div>
             </div>
 
-            <!-- Pet Card 3 -->
-            <div class="pet-card pet-item rounded-2xl overflow-hidden border border-white/50 shadow-sm" data-category="dog">
-                <img src="https://images.unsplash.com/photo-1537151608804-ea6f11cc581c?auto=format&fit=crop&w=600&q=80" alt="Beagle dog" class="w-full h-56 object-cover">
+            <!-- Charlie -->
+            <div class="pet-card pet-item rounded-2xl overflow-hidden border border-white/50 shadow-sm relative" data-category="dog">
+                <span class="absolute top-4 right-4 bg-black/40 text-white text-[10px] font-mono px-2 py-1 rounded-md backdrop-blur-sm shadow-sm z-10">
+                    #dog0002
+                </span>
+
+                <img
+                    src="https://images.unsplash.com/photo-1537151608804-ea6f11cc581c?auto=format&fit=crop&w=600&q=80"
+                    alt="Charlie, Beagle"
+                    class="w-full h-56 object-cover">
+
                 <div class="p-6">
                     <div class="flex justify-between items-start mb-4">
                         <h3 class="text-2xl font-bold text-gray-900">Charlie</h3>
+
                         <span class="badge-dog px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider inline-flex items-center">
                             <i class="fas fa-dog mr-1"></i> Dog
                         </span>
                     </div>
-                    <div class="space-y-2 text-gray-600 text-sm">
-                        <p><i class="fas fa-dna w-5 text-gray-400"></i> <strong class="text-gray-700">Breed:</strong> Beagle</p>
-                        <p><i class="fas fa-birthday-cake w-5 text-gray-400"></i> <strong class="text-gray-700">Age:</strong> 3 Years</p>
+
+                    <div class="space-y-2 text-gray-600 text-sm mb-4">
+                        <p>
+                            <i class="fas fa-dna w-5 text-gray-400"></i>
+                            <strong class="text-gray-700">Breed:</strong> Beagle
+                        </p>
+                        <p>
+                            <i class="fas fa-birthday-cake w-5 text-gray-400"></i>
+                            <strong class="text-gray-700">Age:</strong> 3 Years
+                        </p>
                     </div>
-                    <button onclick="openModal('Charlie', 'Beagle')" class="mt-6 w-full bg-brand-500 hover:bg-brand-600 text-white font-bold py-2.5 px-4 rounded-xl transition duration-200">Meet Charlie</button>
+
+                    <div class="mb-4">
+                        <div class="flex justify-between text-xs font-semibold text-gray-600 mb-1">
+                            <span>Status</span>
+                            <span class="text-blue-600">Neutered & Healthy</span>
+                        </div>
+
+                        <div class="progress-bar-bg">
+                            <div class="progress-bar-fill-neutered"></div>
+                        </div>
+                    </div>
+
+                    <button
+                        onclick="openModal('Charlie', 'Beagle')"
+                        class="mt-2 w-full bg-brand-500 hover:bg-brand-600 text-white font-bold py-2.5 px-4 rounded-xl transition duration-200">
+                        Meet Charlie
+                    </button>
                 </div>
             </div>
 
-            <!-- Pet Card 4 -->
-            <div class="pet-card pet-item rounded-2xl overflow-hidden border border-white/50 shadow-sm" data-category="cat">
-                <img src="https://images.unsplash.com/photo-1513360371669-4adf3dd7dff8?auto=format&fit=crop&w=600&q=80" alt="Fluffy cat" class="w-full h-56 object-cover">
+            <!-- Milo -->
+            <div class="pet-card pet-item rounded-2xl overflow-hidden border border-white/50 shadow-sm relative" data-category="cat">
+                <span class="absolute top-4 right-4 bg-black/40 text-white text-[10px] font-mono px-2 py-1 rounded-md backdrop-blur-sm shadow-sm z-10">
+                    #cat0002
+                </span>
+
+                <img
+                    src="https://images.unsplash.com/photo-1513360371669-4adf3dd7dff8?auto=format&fit=crop&w=600&q=80"
+                    alt="Milo, Maine Coon Mix"
+                    class="w-full h-56 object-cover">
+
                 <div class="p-6">
                     <div class="flex justify-between items-start mb-4">
                         <h3 class="text-2xl font-bold text-gray-900">Milo</h3>
+
                         <span class="badge-cat px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider inline-flex items-center">
                             <i class="fas fa-cat mr-1"></i> Cat
                         </span>
                     </div>
-                    <div class="space-y-2 text-gray-600 text-sm">
-                        <p><i class="fas fa-dna w-5 text-gray-400"></i> <strong class="text-gray-700">Breed:</strong> Maine Coon Mix</p>
-                        <p><i class="fas fa-birthday-cake w-5 text-gray-400"></i> <strong class="text-gray-700">Age:</strong> 4 Years</p>
+
+                    <div class="space-y-2 text-gray-600 text-sm mb-4">
+                        <p>
+                            <i class="fas fa-dna w-5 text-gray-400"></i>
+                            <strong class="text-gray-700">Breed:</strong> Maine Coon Mix
+                        </p>
+                        <p>
+                            <i class="fas fa-birthday-cake w-5 text-gray-400"></i>
+                            <strong class="text-gray-700">Age:</strong> 4 Years
+                        </p>
                     </div>
-                    <button onclick="openModal('Milo', 'Maine Coon Mix')" class="mt-6 w-full bg-brand-500 hover:bg-brand-600 text-white font-bold py-2.5 px-4 rounded-xl transition duration-200">Meet Milo</button>
+
+                    <div class="mb-4">
+                        <div class="flex justify-between text-xs font-semibold text-gray-600 mb-1">
+                            <span>Status</span>
+                            <span class="text-emerald-600">Open for Adoption</span>
+                        </div>
+
+                        <div class="progress-bar-bg">
+                            <div class="progress-bar-fill-ready"></div>
+                        </div>
+                    </div>
+
+                    <button
+                        onclick="openModal('Milo', 'Maine Coon Mix')"
+                        class="mt-2 w-full bg-brand-500 hover:bg-brand-600 text-white font-bold py-2.5 px-4 rounded-xl transition duration-200">
+                        Meet Milo
+                    </button>
                 </div>
             </div>
 
-            <!-- Pet Card 5 -->
-            <div class="pet-card pet-item rounded-2xl overflow-hidden border border-white/50 shadow-sm" data-category="dog">
-                <img src="https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?auto=format&fit=crop&w=600&q=80" alt="Poodle mix" class="w-full h-56 object-cover">
+            <!-- Daisy -->
+            <div class="pet-card pet-item rounded-2xl overflow-hidden border border-white/50 shadow-sm relative" data-category="dog">
+                <span class="absolute top-4 right-4 bg-black/40 text-white text-[10px] font-mono px-2 py-1 rounded-md backdrop-blur-sm shadow-sm z-10">
+                    #dog0003
+                </span>
+
+                <img
+                    src="https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?auto=format&fit=crop&w=600&q=80"
+                    alt="Daisy, Poodle Mix"
+                    class="w-full h-56 object-cover">
+
                 <div class="p-6">
                     <div class="flex justify-between items-start mb-4">
                         <h3 class="text-2xl font-bold text-gray-900">Daisy</h3>
+
                         <span class="badge-dog px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider inline-flex items-center">
                             <i class="fas fa-dog mr-1"></i> Dog
                         </span>
                     </div>
-                    <div class="space-y-2 text-gray-600 text-sm">
-                        <p><i class="fas fa-dna w-5 text-gray-400"></i> <strong class="text-gray-700">Breed:</strong> Poodle Mix</p>
-                        <p><i class="fas fa-birthday-cake w-5 text-gray-400"></i> <strong class="text-gray-700">Age:</strong> 1.5 Years</p>
+
+                    <div class="space-y-2 text-gray-600 text-sm mb-4">
+                        <p>
+                            <i class="fas fa-dna w-5 text-gray-400"></i>
+                            <strong class="text-gray-700">Breed:</strong> Poodle Mix
+                        </p>
+                        <p>
+                            <i class="fas fa-birthday-cake w-5 text-gray-400"></i>
+                            <strong class="text-gray-700">Age:</strong> 1.5 Years
+                        </p>
                     </div>
-                    <button onclick="openModal('Daisy', 'Poodle Mix')" class="mt-6 w-full bg-brand-500 hover:bg-brand-600 text-white font-bold py-2.5 px-4 rounded-xl transition duration-200">Meet Daisy</button>
+
+                    <div class="mb-4">
+                        <div class="flex justify-between text-xs font-semibold text-gray-600 mb-1">
+                            <span>Status</span>
+                            <span class="text-emerald-600">Open for Adoption</span>
+                        </div>
+
+                        <div class="progress-bar-bg">
+                            <div class="progress-bar-fill-ready"></div>
+                        </div>
+                    </div>
+
+                    <button
+                        onclick="openModal('Daisy', 'Poodle Mix')"
+                        class="mt-2 w-full bg-brand-500 hover:bg-brand-600 text-white font-bold py-2.5 px-4 rounded-xl transition duration-200">
+                        Meet Daisy
+                    </button>
                 </div>
             </div>
 
-            <!-- Pet Card 6 -->
-            <div class="pet-card pet-item rounded-2xl overflow-hidden border border-white/50 shadow-sm" data-category="cat">
-                <img src="https://images.unsplash.com/photo-1513245543132-31f507417b26?auto=format&fit=crop&w=600&q=80" alt="Siamese cat" class="w-full h-56 object-cover">
+            <!-- Leo -->
+            <div class="pet-card pet-item rounded-2xl overflow-hidden border border-white/50 shadow-sm relative" data-category="cat">
+                <span class="absolute top-4 right-4 bg-black/40 text-white text-[10px] font-mono px-2 py-1 rounded-md backdrop-blur-sm shadow-sm z-10">
+                    #cat0003
+                </span>
+
+                <img
+                    src="https://images.unsplash.com/photo-1513245543132-31f507417b26?auto=format&fit=crop&w=600&q=80"
+                    alt="Leo, Siamese Mix"
+                    class="w-full h-56 object-cover">
+
                 <div class="p-6">
                     <div class="flex justify-between items-start mb-4">
                         <h3 class="text-2xl font-bold text-gray-900">Leo</h3>
+
                         <span class="badge-cat px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider inline-flex items-center">
                             <i class="fas fa-cat mr-1"></i> Cat
                         </span>
                     </div>
-                    <div class="space-y-2 text-gray-600 text-sm">
-                        <p><i class="fas fa-dna w-5 text-gray-400"></i> <strong class="text-gray-700">Breed:</strong> Siamese Mix</p>
-                        <p><i class="fas fa-birthday-cake w-5 text-gray-400"></i> <strong class="text-gray-700">Age:</strong> 2 Years</p>
+
+                    <div class="space-y-2 text-gray-600 text-sm mb-4">
+                        <p>
+                            <i class="fas fa-dna w-5 text-gray-400"></i>
+                            <strong class="text-gray-700">Breed:</strong> Siamese Mix
+                        </p>
+                        <p>
+                            <i class="fas fa-birthday-cake w-5 text-gray-400"></i>
+                            <strong class="text-gray-700">Age:</strong> 2 Years
+                        </p>
                     </div>
-                    <button onclick="openModal('Leo', 'Siamese Mix')" class="mt-6 w-full bg-brand-500 hover:bg-brand-600 text-white font-bold py-2.5 px-4 rounded-xl transition duration-200">Meet Leo</button>
+
+                    <div class="mb-4">
+                        <div class="flex justify-between text-xs font-semibold text-gray-600 mb-1">
+                            <span>Status</span>
+                            <span class="text-blue-600">Neutered & Healthy</span>
+                        </div>
+
+                        <div class="progress-bar-bg">
+                            <div class="progress-bar-fill-neutered"></div>
+                        </div>
+                    </div>
+
+                    <button
+                        onclick="openModal('Leo', 'Siamese Mix')"
+                        class="mt-2 w-full bg-brand-500 hover:bg-brand-600 text-white font-bold py-2.5 px-4 rounded-xl transition duration-200">
+                        Meet Leo
+                    </button>
                 </div>
             </div>
 
-            <!-- Pet Card 7 -->
-            <div class="pet-card pet-item rounded-2xl overflow-hidden border border-white/50 shadow-sm" data-category="dog">
-                <img src="https://images.unsplash.com/photo-1589941013453-ec89f33b6e9e?auto=format&fit=crop&w=600&q=80" alt="German shepherd" class="w-full h-56 object-cover">
+            <!-- Max -->
+            <div class="pet-card pet-item rounded-2xl overflow-hidden border border-white/50 shadow-sm relative" data-category="dog">
+                <span class="absolute top-4 right-4 bg-black/40 text-white text-[10px] font-mono px-2 py-1 rounded-md backdrop-blur-sm shadow-sm z-10">
+                    #dog0004
+                </span>
+
+                <img
+                    src="https://images.unsplash.com/photo-1589941013453-ec89f33b6e9e?auto=format&fit=crop&w=600&q=80"
+                    alt="Max, German Shepherd"
+                    class="w-full h-56 object-cover">
+
                 <div class="p-6">
                     <div class="flex justify-between items-start mb-4">
                         <h3 class="text-2xl font-bold text-gray-900">Max</h3>
+
                         <span class="badge-dog px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider inline-flex items-center">
                             <i class="fas fa-dog mr-1"></i> Dog
                         </span>
                     </div>
-                    <div class="space-y-2 text-gray-600 text-sm">
-                        <p><i class="fas fa-dna w-5 text-gray-400"></i> <strong class="text-gray-700">Breed:</strong> German Shepherd</p>
-                        <p><i class="fas fa-birthday-cake w-5 text-gray-400"></i> <strong class="text-gray-700">Age:</strong> 5 Years</p>
+
+                    <div class="space-y-2 text-gray-600 text-sm mb-4">
+                        <p>
+                            <i class="fas fa-dna w-5 text-gray-400"></i>
+                            <strong class="text-gray-700">Breed:</strong> German Shepherd
+                        </p>
+                        <p>
+                            <i class="fas fa-birthday-cake w-5 text-gray-400"></i>
+                            <strong class="text-gray-700">Age:</strong> 5 Years
+                        </p>
                     </div>
-                    <button onclick="openModal('Max', 'German Shepherd')" class="mt-6 w-full bg-brand-500 hover:bg-brand-600 text-white font-bold py-2.5 px-4 rounded-xl transition duration-200">Meet Max</button>
+
+                    <div class="mb-4">
+                        <div class="flex justify-between text-xs font-semibold text-gray-600 mb-1">
+                            <span>Status</span>
+                            <span class="text-amber-600">Under Treatment</span>
+                        </div>
+
+                        <div class="progress-bar-bg">
+                            <div class="progress-bar-fill-treatment"></div>
+                        </div>
+                    </div>
+
+                    <button
+                        onclick="openModal('Max', 'German Shepherd')"
+                        class="mt-2 w-full bg-brand-500 hover:bg-brand-600 text-white font-bold py-2.5 px-4 rounded-xl transition duration-200">
+                        Meet Max
+                    </button>
                 </div>
             </div>
 
-            <!-- Pet Card 8 -->
-            <div class="pet-card pet-item rounded-2xl overflow-hidden border border-white/50 shadow-sm" data-category="cat">
-                <img src="https://images.unsplash.com/photo-1574158622682-e40e69881006?auto=format&fit=crop&w=600&q=80" alt="Ragdoll cat" class="w-full h-56 object-cover">
+            <!-- Chloe -->
+            <div class="pet-card pet-item rounded-2xl overflow-hidden border border-white/50 shadow-sm relative" data-category="cat">
+                <span class="absolute top-4 right-4 bg-black/40 text-white text-[10px] font-mono px-2 py-1 rounded-md backdrop-blur-sm shadow-sm z-10">
+                    #cat0004
+                </span>
+
+                <img
+                    src="https://images.unsplash.com/photo-1574158622682-e40e69881006?auto=format&fit=crop&w=600&q=80"
+                    alt="Chloe, Ragdoll"
+                    class="w-full h-56 object-cover">
+
                 <div class="p-6">
                     <div class="flex justify-between items-start mb-4">
                         <h3 class="text-2xl font-bold text-gray-900">Chloe</h3>
+
                         <span class="badge-cat px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider inline-flex items-center">
                             <i class="fas fa-cat mr-1"></i> Cat
                         </span>
                     </div>
-                    <div class="space-y-2 text-gray-600 text-sm">
-                        <p><i class="fas fa-dna w-5 text-gray-400"></i> <strong class="text-gray-700">Breed:</strong> Ragdoll</p>
-                        <p><i class="fas fa-birthday-cake w-5 text-gray-400"></i> <strong class="text-gray-700">Age:</strong> 3 Years</p>
+
+                    <div class="space-y-2 text-gray-600 text-sm mb-4">
+                        <p>
+                            <i class="fas fa-dna w-5 text-gray-400"></i>
+                            <strong class="text-gray-700">Breed:</strong> Ragdoll
+                        </p>
+                        <p>
+                            <i class="fas fa-birthday-cake w-5 text-gray-400"></i>
+                            <strong class="text-gray-700">Age:</strong> 3 Years
+                        </p>
                     </div>
-                    <button onclick="openModal('Chloe', 'Ragdoll')" class="mt-6 w-full bg-brand-500 hover:bg-brand-600 text-white font-bold py-2.5 px-4 rounded-xl transition duration-200">Meet Chloe</button>
+
+                    <div class="mb-4">
+                        <div class="flex justify-between text-xs font-semibold text-gray-600 mb-1">
+                            <span>Status</span>
+                            <span class="text-emerald-600">Open for Adoption</span>
+                        </div>
+
+                        <div class="progress-bar-bg">
+                            <div class="progress-bar-fill-ready"></div>
+                        </div>
+                    </div>
+
+                    <button
+                        onclick="openModal('Chloe', 'Ragdoll')"
+                        class="mt-2 w-full bg-brand-500 hover:bg-brand-600 text-white font-bold py-2.5 px-4 rounded-xl transition duration-200">
+                        Meet Chloe
+                    </button>
                 </div>
             </div>
 
-            <!-- Pet Card 9 -->
-            <div class="pet-card pet-item rounded-2xl overflow-hidden border border-white/50 shadow-sm" data-category="dog">
-                <img src="https://images.unsplash.com/photo-1517849845537-4d257902454a?auto=format&fit=crop&w=600&q=80" alt="Bulldog" class="w-full h-56 object-cover">
+            <!-- Cooper -->
+            <div class="pet-card pet-item rounded-2xl overflow-hidden border border-white/50 shadow-sm relative" data-category="dog">
+                <span class="absolute top-4 right-4 bg-black/40 text-white text-[10px] font-mono px-2 py-1 rounded-md backdrop-blur-sm shadow-sm z-10">
+                    #dog0005
+                </span>
+
+                <img
+                    src="https://images.unsplash.com/photo-1517849845537-4d257902454a?auto=format&fit=crop&w=600&q=80"
+                    alt="Cooper, Bulldog"
+                    class="w-full h-56 object-cover">
+
                 <div class="p-6">
                     <div class="flex justify-between items-start mb-4">
                         <h3 class="text-2xl font-bold text-gray-900">Cooper</h3>
+
                         <span class="badge-dog px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider inline-flex items-center">
                             <i class="fas fa-dog mr-1"></i> Dog
                         </span>
                     </div>
-                    <div class="space-y-2 text-gray-600 text-sm">
-                        <p><i class="fas fa-dna w-5 text-gray-400"></i> <strong class="text-gray-700">Breed:</strong> Bulldog</p>
-                        <p><i class="fas fa-birthday-cake w-5 text-gray-400"></i> <strong class="text-gray-700">Age:</strong> 2 Years</p>
+
+                    <div class="space-y-2 text-gray-600 text-sm mb-4">
+                        <p>
+                            <i class="fas fa-dna w-5 text-gray-400"></i>
+                            <strong class="text-gray-700">Breed:</strong> Bulldog
+                        </p>
+                        <p>
+                            <i class="fas fa-birthday-cake w-5 text-gray-400"></i>
+                            <strong class="text-gray-700">Age:</strong> 2 Years
+                        </p>
                     </div>
-                    <button onclick="openModal('Cooper', 'Bulldog')" class="mt-6 w-full bg-brand-500 hover:bg-brand-600 text-white font-bold py-2.5 px-4 rounded-xl transition duration-200">Meet Cooper</button>
+
+                    <div class="mb-4">
+                        <div class="flex justify-between text-xs font-semibold text-gray-600 mb-1">
+                            <span>Status</span>
+                            <span class="text-blue-600">Neutered & Healthy</span>
+                        </div>
+
+                        <div class="progress-bar-bg">
+                            <div class="progress-bar-fill-neutered"></div>
+                        </div>
+                    </div>
+
+                    <button
+                        onclick="openModal('Cooper', 'Bulldog')"
+                        class="mt-2 w-full bg-brand-500 hover:bg-brand-600 text-white font-bold py-2.5 px-4 rounded-xl transition duration-200">
+                        Meet Cooper
+                    </button>
                 </div>
             </div>
 
@@ -247,60 +605,101 @@
     <!-- Footer -->
     <footer class="bg-gray-900/90 backdrop-blur-md text-white py-12 mt-auto border-t border-gray-800/50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center md:text-left grid grid-cols-1 md:grid-cols-2 gap-8">
+
             <div>
-                <h4 class="text-xl font-bold mb-4"><i class="fas fa-paw text-brand-500 mr-2"></i>WarmPaws</h4>
-                <p class="text-gray-400 text-sm">Finding loving forever homes for stray dogs and cats. Every pet deserves a warm paw to hold.</p>
+                <h4 class="text-xl font-bold mb-4">
+                    <i class="fas fa-paw text-brand-500 mr-2"></i>
+                    WarmPaws
+                </h4>
+
+                <p class="text-gray-400 text-sm">
+                    Finding loving forever homes for stray dogs and cats.
+                    Every pet deserves a warm paw to hold.
+                </p>
             </div>
+
             <div>
                 <h4 class="text-lg font-bold mb-4">Contact Us</h4>
-                <p class="text-gray-400 text-sm mb-2"><i class="fas fa-map-marker-alt mr-2 text-brand-500"></i> 123 Rescue Lane, Hope City</p>
-                <p class="text-gray-400 text-sm"><i class="fas fa-envelope mr-2 text-brand-500"></i> hello@warmpaws.org</p>
+
+                <p class="text-gray-400 text-sm mb-2">
+                    <i class="fas fa-map-marker-alt mr-2 text-brand-500"></i>
+                    123 Rescue Lane, Hope City
+                </p>
+
+                <p class="text-gray-400 text-sm">
+                    <i class="fas fa-envelope mr-2 text-brand-500"></i>
+                    hello@warmpaws.org
+                </p>
             </div>
+
         </div>
+
         <div class="mt-8 text-center text-gray-500 text-xs border-t border-gray-800 pt-8">
-            &copy; 2023 WarmPaws Adoption Center. All rights reserved.
+            &copy; 2026 WarmPaws Adoption Center. All rights reserved.
         </div>
     </footer>
 
-    <!-- CUSTOM POPUP MODAL (Hidden by default) -->
-    <div id="adoptionModal" class="hidden fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm px-4">
-        <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 text-center transform transition-all">
+    <!-- Adoption Modal -->
+    <div
+        id="adoptionModal"
+        class="hidden fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm px-4"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="modalTitle">
+
+        <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 text-center">
+
             <div class="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-brand-100 mb-4">
                 <i class="fas fa-heart text-brand-500 text-2xl"></i>
             </div>
-            <h3 class="text-2xl font-bold text-gray-900 mb-2">Adopt <span id="modalPetName">Pet</span>!</h3>
+
+            <h3 id="modalTitle" class="text-2xl font-bold text-gray-900 mb-2">
+                Adopt <span id="modalPetName">Pet</span>!
+            </h3>
+
             <p class="text-gray-600 mb-6">
-                You are taking the first step to give this beautiful <span id="modalPetBreed">breed</span> a forever home. Please contact our shelter to schedule a visit!
+                You are taking the first step to give this beautiful
+                <span id="modalPetBreed">breed</span> a forever home.
+                Please contact our shelter to schedule a visit!
             </p>
+
             <div class="flex flex-col space-y-3">
-                <button class="w-full bg-brand-500 hover:bg-brand-600 text-white font-bold py-3 px-4 rounded-xl transition duration-200">
-                    Call Shelter: (555) 123-4567
-                </button>
-                <button onclick="closeModal()" class="w-full bg-gray-100 hover:bg-gray-200 text-gray-800 font-bold py-3 px-4 rounded-xl transition duration-200">
+
+                <a
+                    href="tel:+15551234567"
+                    class="w-full bg-brand-500 hover:bg-brand-600 text-white font-bold py-3 px-4 rounded-xl transition duration-200">
+                    <i class="fas fa-phone mr-2"></i>
+                    Call Shelter
+                </a>
+
+                <button
+                    onclick="closeModal()"
+                    class="w-full bg-gray-100 hover:bg-gray-200 text-gray-800 font-bold py-3 px-4 rounded-xl transition duration-200">
                     Maybe Later
                 </button>
+
             </div>
         </div>
     </div>
 
-    <!-- JavaScript to make the buttons work -->
+    <!-- JavaScript -->
     <script>
-        // Filter logic to hide/show pets based on category
         function filterPets(category) {
             const pets = document.querySelectorAll('.pet-item');
-            
+
             pets.forEach(pet => {
                 if (category === 'all' || pet.dataset.category === category) {
-                    pet.style.display = 'block'; // Show card
+                    pet.style.display = '';
                 } else {
-                    pet.style.display = 'none'; // Hide card
+                    pet.style.display = 'none';
                 }
             });
 
-            // Update button styles to highlight the active filter
             const buttons = ['all', 'dog', 'cat'];
+
             buttons.forEach(btn => {
                 const buttonElement = document.getElementById('filter-' + btn);
+
                 if (btn === category) {
                     buttonElement.classList.add('bg-brand-500', 'text-white');
                     buttonElement.classList.remove('bg-white', 'text-gray-700');
@@ -312,18 +711,31 @@
         }
 
         function openModal(petName, petBreed) {
-            // Update the text inside the modal to match the clicked pet
-            document.getElementById('modalPetName').innerText = petName;
-            document.getElementById('modalPetBreed').innerText = petBreed;
-            
-            // Show the modal
+            document.getElementById('modalPetName').textContent = petName;
+            document.getElementById('modalPetBreed').textContent = petBreed;
             document.getElementById('adoptionModal').classList.remove('hidden');
+            document.body.classList.add('modal-open');
         }
 
         function closeModal() {
-            // Hide the modal
             document.getElementById('adoptionModal').classList.add('hidden');
+            document.body.classList.remove('modal-open');
         }
+
+        // Close modal when clicking outside the dialog
+        document.getElementById('adoptionModal').addEventListener('click', function(event) {
+            if (event.target === this) {
+                closeModal();
+            }
+        });
+
+        // Close modal with Escape key
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeModal();
+            }
+        });
     </script>
+
 </body>
 </html>
