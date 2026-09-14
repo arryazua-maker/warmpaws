@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Warmpaws - Lost & Found</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Nunito', 'sans-serif'],
+                    },
+                    colors: {
+                        wp: {
+                            lightyellow: '#FDF1D6',
+                            peach: '#FDE2D3',
+                            pink: '#F8D1DF',
+                            darkpink: '#E8A5B9',
+                            orange: '#F5C6A5',
+                            text: '#5A4641',
+                            muted: '#8C7771'
+                        }
+                    },
+                    boxShadow: {
+                        'soft': '0 10px 25px -5px rgba(232, 165, 185, 0.3), 0 8px 10px -6px rgba(232, 165, 185, 0.2)',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            /* Fallback gradient if background image fails */
+            background: linear-gradient(135deg, #FDF1D6 0%, #FDE2D3 50%, #F8D1DF 100%);
+            /* Using the provided background image */
+            background-image: url('warmpawsmainbackground.png');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            min-height: 100vh;
+            color: #5A4641;
+        }
+        
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+
+        .pet-card {
+            transition: all 0.3s ease;
+        }
+
+        .pet-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px -5px rgba(232, 165, 185, 0.4);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #E8A5B9;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #F5C6A5;
+        }
+
+        /* Modal Animation */
+        #modal-overlay {
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        #modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        #modal-content {
+            transform: scale(0.95) translateY(20px);
+            opacity: 0;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        #modal-overlay.active #modal-content {
+            transform: scale(1) translateY(0);
+            opacity: 1;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <main class="max-w-6xl mx-auto px-4 py-12 relative z-10">
+        
+        <!-- Header Section -->
+        <div class="text-center mb-16">
+            <h1 class="text-4xl md:text-5xl font-extrabold mb-4 text-wp-text">Lost & Found Pets</h1>
+            <p class="text-lg text-wp-muted max-w-2xl mx-auto font-medium">
+                Help us reunite these precious companions with their loving families. 
+                Whether you've lost a pet or found a wandering friend, you're in the right place.
+            </p>
+            <div class="mt-8 flex justify-center gap-4">
+                <button onclick="openReportModal('LOST')" class="bg-wp-darkpink hover:bg-opacity-90 text-white px-6 py-3 rounded-full font-bold shadow-soft transition-all transform hover:scale-105">
+                    <i class="fa-solid fa-bullhorn mr-2"></i> Report Lost Pet
+                </button>
+                <button onclick="openReportModal('FOUND')" class="bg-white hover:bg-gray-50 text-wp-darkpink border-2 border-wp-darkpink px-6 py-3 rounded-full font-bold shadow-sm transition-all transform hover:scale-105">
+                    <i class="fa-solid fa-hand-holding-heart mr-2"></i> Report Found Pet
+                </button>
+            </div>
+        </div>
+
+        <!-- Lost Pets Section -->
+        <div class="mb-20">
+            <div class="flex items-center gap-4 mb-8">
+                <div class="h-10 w-2 bg-wp-orange rounded-full"></div>
+                <h2 class="text-3xl font-bold text-wp-text">Lost Pets</h2>
+                <div class="flex-grow border-t-2 border-wp-orange border-opacity-30 border-dashed ml-4"></div>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="lost-pets-container">
+                <!-- Lost Pet Cards will be injected here by JS -->
+            </div>
+        </div>
+
+        <!-- Found Pets Section -->
+        <div>
+            <div class="flex items-center gap-4 mb-8">
+                <div class="h-10 w-2 bg-wp-darkpink rounded-full"></div>
+                <h2 class="text-3xl font-bold text-wp-text">Found Pets</h2>
+                <div class="flex-grow border-t-2 border-wp-darkpink border-opacity-30 border-dashed ml-4"></div>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="found-pets-container">
+                <!-- Found Pet Cards will be injected here by JS -->
+            </div>
+        </div>
+
+    </main>
+
+    <footer class="glass-panel mt-20 border-t border-white border-opacity-40 pt-12 pb-8">
+        <div class="max-w-6xl mx-auto px-4 text-center">
+            <div class="flex justify-center items-center gap-2 mb-4">
+                <i class="fa-solid fa-paw text-wp-darkpink text-xl"></i>
+                <span class="font-bold text-xl text-wp-text">Warmpaws</span>
+            </div>
+            <p class="text-wp-muted mb-6 font-medium">Reuniting families, one paw at a time.</p>
+            <div class="flex justify-center gap-6 text-wp-darkpink text-xl mb-8">
+                <a href="#" class="hover:text-wp-orange transition-colors"><i class="fa-brands fa-instagram"></i></a>
+                <a href="#" class="hover:text-wp-orange transition-colors"><i class="fa-brands fa-facebook"></i></a>
+                <a href="#" class="hover:text-wp-orange transition-colors"><i class="fa-brands fa-twitter"></i></a>
+            </div>
+            <p class="text-sm text-wp-muted opacity-80">&copy; 2026 Warmpaws Rescue. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Report Pet Modal Overlay -->
+    <div id="report-modal-overlay" class="fixed inset-0 bg-wp-text bg-opacity-40 backdrop-blur-sm z-50 flex items-center justify-center p-4 opacity-0 invisible transition-all duration-300">
+        <!-- Modal Content -->
+        <div id="report-modal-content" class="bg-white rounded-3xl w-full max-w-2xl shadow-2xl overflow-hidden flex flex-col relative transform scale-95 translate-y-5 transition-all duration-300 max-h-[90vh]">
+            
+            <div class="bg-wp-lightyellow px-6 py-4 border-b border-wp-orange/20 relative">
+                <button onclick="closeReportModal()" type="button" class="absolute top-4 right-4 bg-white hover:bg-wp-peach text-wp-text w-8 h-8 rounded-full flex items-center justify-center shadow-sm transition-colors">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+                <h2 id="report-modal-title" class="text-2xl font-extrabold text-wp-text">Report a Pet</h2>
+                <p class="text-sm text-wp-muted">Please fill in the details below.</p>
+            </div>
+
+            <div class="p-6 overflow-y-auto">
+                <form id="report-form" onsubmit="submitReport(event)" class="space-y-4">
+                    <input type="hidden" id="report-status" value="">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div id="report-name-container">
+                            <label class="block text-xs font-bold text-wp-muted uppercase mb-1">Pet Name *</label>
+                            <input type="text" id="report-name" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2 outline-none focus:border-wp-darkpink focus:ring-1 focus:ring-wp-darkpink transition-all">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-wp-muted uppercase mb-1">Type *</label>
+                            <select id="report-type" required class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2 outline-none focus:border-wp-darkpink focus:ring-1 focus:ring-wp-darkpink transition-all">
+                                <option value="Dog">Dog</option>
+                                <option value="Cat">Cat</option>
+                                <option value="Bird">Bird</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-wp-muted uppercase mb-1">Age</label>
+                            <input type="text" id="report-age" placeholder="e.g. 2 Years" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2 outline-none focus:border-wp-darkpink focus:ring-1 focus:ring-wp-darkpink transition-all">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-wp-muted uppercase mb-1">Gender</label>
+                            <select id="report-gender" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2 outline-none focus:border-wp-darkpink focus:ring-1 focus:ring-wp-darkpink transition-all">
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                                <option value="Unknown">Unknown</option>
+                            </select>
+                        </div>
+                        <div id="report-breed-container" class="md:col-span-2">
+                            <label class="block text-xs font-bold text-wp-muted uppercase mb-1">Breed</label>
+                            <input type="text" id="report-breed" placeholder="e.g. Golden Retriever" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2 outline-none focus:border-wp-darkpink focus:ring-1 focus:ring-wp-darkpink transition-all">
+                        </div>
+                        <div class="md:col-span-2">
+                            <label id="report-location-label" class="block text-xs font-bold text-wp-muted uppercase mb-1">Location *</label>
+                            <input type="text" id="report-location" required placeholder="e.g. KLCC Park" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2 outline-none focus:border-wp-darkpink focus:ring-1 focus:ring-wp-darkpink transition-all">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-wp-muted uppercase mb-1">Contact Phone *</label>
+                            <input type="tel" id="report-phone" required placeholder="+60 1X-XXX XXXX" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2 outline-none focus:border-wp-darkpink focus:ring-1 focus:ring-wp-darkpink transition-all">
+                        </div>
+                        <div>
+                            <label id="report-date-label" class="block text-xs font-bold text-wp-muted uppercase mb-1">Date *</label>
+                            <input type="date" id="report-date" required class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2 outline-none focus:border-wp-darkpink focus:ring-1 focus:ring-wp-darkpink transition-all">
+                        </div>
+                        <div class="md:col-span-2">
+                            <label class="block text-xs font-bold text-wp-muted uppercase mb-1">Photo Upload</label>
+                            <input type="file" accept="image/*" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2 outline-none focus:border-wp-darkpink focus:ring-1 focus:ring-wp-darkpink transition-all text-sm text-wp-muted file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-wp-peach file:text-wp-text hover:file:bg-wp-orange">
+                        </div>
+                        <div class="md:col-span-2">
+                            <label class="block text-xs font-bold text-wp-muted uppercase mb-1">Description</label>
+                            <textarea id="report-description" rows="3" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2 outline-none focus:border-wp-darkpink focus:ring-1 focus:ring-wp-darkpink transition-all"></textarea>
+                        </div>
+                    </div>
+                    <div class="mt-6 pt-4 border-t border-gray-100">
+                        <button type="submit" class="w-full bg-wp-darkpink hover:bg-opacity-90 text-white font-bold py-3 rounded-xl shadow-md transition-all">
+                            Submit Report
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Overlay -->
+    <div id="modal-overlay" class="fixed inset-0 bg-wp-text bg-opacity-40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        
+        <!-- Modal Content -->
+        <div id="modal-content" class="bg-white rounded-3xl w-full max-w-2xl shadow-2xl overflow-hidden flex flex-col md:flex-row relative">
+            
+            <!-- Close Button -->
+            <button onclick="closeModal()" class="absolute top-4 right-4 z-10 bg-white bg-opacity-80 hover:bg-wp-lightyellow text-wp-text w-10 h-10 rounded-full flex items-center justify-center shadow-sm transition-colors">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+
+            <!-- Modal Image Side -->
+            <div class="w-full md:w-2/5 h-64 md:h-auto relative bg-wp-lightyellow">
+                <img id="modal-img" src="" alt="Pet" class="absolute inset-0 w-full h-full object-cover">
+                <div id="modal-status-badge" class="absolute top-4 left-4 px-3 py-1 rounded-full text-sm font-bold text-white uppercase tracking-wide shadow-md">
+                    <!-- Status injected via JS -->
+                </div>
+            </div>
+            
+            <!-- Modal Details Side -->
+            <div class="w-full md:w-3/5 p-6 md:p-8 flex flex-col justify-between bg-white relative">
+                <!-- Decorative element -->
+                <i class="fa-solid fa-paw absolute bottom-4 right-4 text-6xl text-wp-peach opacity-30 -rotate-12"></i>
+                
+                <div>
+                    <h3 id="modal-title" class="text-3xl font-extrabold text-wp-text mb-2">Pet Name/ID</h3>
+                    <p id="modal-subtitle" class="text-wp-muted font-medium mb-6 flex items-center gap-2">
+                        <i class="fa-solid fa-location-dot"></i> <span id="modal-location">Location</span>
+                    </p>
+                    
+                    <div class="space-y-4">
+                        <div class="grid grid-cols-2 gap-4 bg-wp-lightyellow bg-opacity-50 p-4 rounded-2xl">
+                            <div>
+                                <p class="text-xs text-wp-muted uppercase font-bold tracking-wider mb-1">Type</p>
+                                <p id="modal-type" class="font-semibold text-wp-text flex items-center gap-2">
+                                    <!-- Icon and text injected via JS -->
+                                </p>
+                            </div>
+                            <div>
+                                <p class="text-xs text-wp-muted uppercase font-bold tracking-wider mb-1">Gender</p>
+                                <p id="modal-gender" class="font-semibold text-wp-text flex items-center gap-2">
+                                    <!-- Icon and text injected via JS -->
+                                </p>
+                            </div>
+                            <div>
+                                <p class="text-xs text-wp-muted uppercase font-bold tracking-wider mb-1">Age</p>
+                                <p id="modal-age" class="font-semibold text-wp-text">Age info</p>
+                            </div>
+                            <div id="breed-container">
+                                <p class="text-xs text-wp-muted uppercase font-bold tracking-wider mb-1">Breed</p>
+                                <p id="modal-breed" class="font-semibold text-wp-text">Breed info</p>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <p class="text-xs text-wp-muted uppercase font-bold tracking-wider mb-2">Description / Notes</p>
+                            <p id="modal-description" class="text-sm text-wp-text leading-relaxed">
+                                Description goes here.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mt-8 pt-6 border-t border-gray-100">
+                    <p class="text-sm text-wp-muted mb-3 font-semibold text-center">Do you have information?</p>
+                    <a id="modal-phone-link" href="#" class="block w-full bg-wp-text hover:bg-wp-muted text-white text-center py-3 rounded-xl font-bold transition-colors shadow-md">
+                        <i class="fa-solid fa-phone mr-2"></i> Call: <span id="modal-phone">Phone Number</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Data for Lost Pets (Includes Breed)
+        const lostPets = [
+            {
+                id: 'L001',
+                name: 'Milo',
+                type: 'Dog',
+                age: '3 Years',
+                gender: 'Male',
+                breed: 'Golden Retriever Mix',
+                location: 'Taman Tun Dr Ismail, KL',
+                date: 'Sept 10, 2026',
+                description: 'Milo slipped his collar near the park. He is very friendly but might be scared. He responds to treats.',
+                phone: '+60 12-345 6789',
+                image: 'https://images.unsplash.com/photo-1552053831-71594a27632d?auto=format&fit=crop&w=600&q=80'
+            },
+            {
+                id: 'L002',
+                name: 'Luna',
+                type: 'Cat',
+                age: '1.5 Years',
+                gender: 'Female',
+                breed: 'Domestic Shorthair',
+                location: 'Bangsar South',
+                date: 'Sept 12, 2026',
+                description: 'Indoor cat, accidentally got out. Wearing a pink collar with a bell. Very skittish.',
+                phone: '+60 19-876 5432',
+                image: 'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?auto=format&fit=crop&w=600&q=80'
+            },
+            {
+                id: 'L003',
+                name: 'Charlie',
+                type: 'Dog',
+                age: '8 Months',
+                gender: 'Male',
+                breed: 'Beagle',
+                location: 'Mont Kiara',
+                date: 'Sept 13, 2026',
+                description: 'Puppy, very energetic. Microchipped. Last seen chasing a squirrel near the international school.',
+                phone: '+60 11-2233 4455',
+                image: 'https://images.unsplash.com/photo-1537151608828-ea2b11777ee8?auto=format&fit=crop&w=600&q=80'
+            }
+        ];
+
+        // Data for Found Pets (Excludes Breed per instructions)
+        const foundPets = [
+            {
+                id: 'F001',
+                type: 'Cat',
+                age: 'Approx 2 Years',
+                gender: 'Male',
+                location: 'Subang Jaya SS15',
+                date: 'Sept 11, 2026',
+                description: 'Found wandering near the hawker stalls. Very affectionate, seems well-fed. No collar.',
+                phone: '+60 14-556 7788',
+                image: 'https://images.unsplash.com/photo-1573865526739-10659fec78a5?auto=format&fit=crop&w=600&q=80'
+            },
+            {
+                id: 'F002',
+                type: 'Dog',
+                age: 'Senior (8+ Years)',
+                gender: 'Female',
+                location: 'Petaling Jaya Seksyen 17',
+                date: 'Sept 13, 2026',
+                description: 'Older dog found resting on my porch. Has a slight limp. Wearing a faded blue collar, no tags.',
+                phone: '+60 17-665 4321',
+                image: 'https://images.unsplash.com/photo-1558788353-f76d92427f16?auto=format&fit=crop&w=600&q=80'
+            },
+            {
+                id: 'F003',
+                type: 'Bird',
+                age: 'Unknown',
+                gender: 'Unknown',
+                location: 'Desa ParkCity',
+                date: 'Sept 14, 2026',
+                description: 'Found a tame Cockatiel in my garden. It stepped right onto my finger. Currently safe in a spare cage.',
+                phone: '+60 13-999 8888',
+                image: 'https://images.unsplash.com/photo-1522851443657-3a1378f844f2?auto=format&fit=crop&w=600&q=80'
+            }
+        ];
+
+        // Helper to get icons based on animal type
+        function getTypeIcon(type) {
+            const lowerType = type.toLowerCase();
+            if (lowerType.includes('dog')) return '<i class="fa-solid fa-dog"></i>';
+            if (lowerType.includes('cat')) return '<i class="fa-solid fa-cat"></i>';
+            if (lowerType.includes('bird')) return '<i class="fa-solid fa-crow"></i>';
+            return '<i class="fa-solid fa-paw"></i>';
+        }
+
+        // Helper to get gender icons
+        function getGenderIcon(gender) {
+            const lowerGender = gender.toLowerCase();
+            if (lowerGender === 'male') return '<i class="fa-solid fa-mars text-blue-400"></i>';
+            if (lowerGender === 'female') return '<i class="fa-solid fa-venus text-pink-400"></i>';
+            return '<i class="fa-solid fa-genderless"></i>';
+        }
+
+        function createPetCard(pet, status) {
+            const isLost = status === 'LOST';
+            const badgeColor = isLost ? 'bg-wp-orange' : 'bg-wp-darkpink';
+            const nameDisplay = isLost ? pet.name : `Found ${pet.type}`;
+            
+            // Serialize pet data to pass to onclick handler securely
+            const petDataStr = encodeURIComponent(JSON.stringify({...pet, status}));
+
+            return `
+                <div class="pet-card glass-panel rounded-3xl overflow-hidden cursor-pointer flex flex-col h-full" 
+                     onclick="openModal('${petDataStr}')">
+                    
+                    <div class="relative h-64 w-full bg-wp-lightyellow overflow-hidden group">
+                        <img src="${pet.image}" alt="${nameDisplay}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                        
+                        <!-- Overlay gradient on hover -->
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                        
+                        <div class="absolute top-4 right-4 ${badgeColor} text-white text-xs font-extrabold px-3 py-1.5 rounded-full uppercase tracking-wider shadow-sm z-10">
+                            ${status}
+                        </div>
+                    </div>
+                    
+                    <div class="p-6 flex flex-col flex-grow relative">
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="text-2xl font-bold text-wp-text">${nameDisplay}</h3>
+                            <span class="text-wp-muted text-xl" title="${pet.type}">
+                                ${getTypeIcon(pet.type)}
+                            </span>
+                        </div>
+                        
+                        <p class="text-sm text-wp-muted mb-4 flex items-center gap-1 font-medium">
+                            <i class="fa-solid fa-location-dot"></i> ${pet.location}
+                        </p>
+                        
+                        <div class="mt-auto pt-4 border-t border-wp-orange border-opacity-20 flex justify-between items-center text-sm">
+                            <span class="font-semibold text-wp-text bg-white bg-opacity-50 px-2 py-1 rounded-md">
+                                <i class="fa-regular fa-calendar mr-1"></i> ${pet.date}
+                            </span>
+                            <span class="text-wp-darkpink font-bold group-hover:translate-x-1 transition-transform">
+                                Details <i class="fa-solid fa-arrow-right text-xs ml-1"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const lostContainer = document.getElementById('lost-pets-container');
+            const foundContainer = document.getElementById('found-pets-container');
+
+            // Render Lost Pets
+            lostPets.forEach(pet => {
+                lostContainer.innerHTML += createPetCard(pet, 'LOST');
+            });
+
+            // Render Found Pets
+            foundPets.forEach(pet => {
+                foundContainer.innerHTML += createPetCard(pet, 'FOUND');
+            });
+
+            // Close modal on escape key
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') closeModal();
+            });
+
+            // Close modal when clicking outside content
+            document.getElementById('modal-overlay').addEventListener('click', (e) => {
+                if (e.target.id === 'modal-overlay') closeModal();
+            });
+
+            // Close report modal when clicking outside
+            document.getElementById('report-modal-overlay').addEventListener('click', (e) => {
+                if (e.target.id === 'report-modal-overlay') closeReportModal();
+            });
+        });
+
+        function openReportModal(status) {
+            const overlay = document.getElementById('report-modal-overlay');
+            const content = document.getElementById('report-modal-content');
+            
+            // Configure modal based on status
+            document.getElementById('report-status').value = status;
+            
+            const isLost = status === 'LOST';
+            document.getElementById('report-modal-title').textContent = isLost ? 'Report a Lost Pet' : 'Report a Found Pet';
+            
+            // Toggle breed and name fields
+            const breedContainer = document.getElementById('report-breed-container');
+            const breedInput = document.getElementById('report-breed');
+            const nameContainer = document.getElementById('report-name-container');
+            const nameInput = document.getElementById('report-name');
+            
+            if (isLost) {
+                breedContainer.style.display = 'block';
+                nameContainer.style.display = 'block';
+                nameInput.required = true;
+                document.getElementById('report-location-label').textContent = 'Last Seen Location *';
+                document.getElementById('report-date-label').textContent = 'Date Lost *';
+            } else {
+                breedContainer.style.display = 'none';
+                breedInput.value = ''; // Clear value
+                nameContainer.style.display = 'none';
+                nameInput.value = ''; // Clear value
+                nameInput.required = false;
+                document.getElementById('report-location-label').textContent = 'Found Location *';
+                document.getElementById('report-date-label').textContent = 'Date Found *';
+            }
+
+            document.body.style.overflow = 'hidden';
+            overlay.classList.remove('opacity-0', 'invisible');
+            overlay.classList.add('opacity-100', 'visible');
+            
+            content.classList.remove('scale-95', 'translate-y-5');
+            content.classList.add('scale-100', 'translate-y-0');
+        }
+
+        function closeReportModal() {
+            const overlay = document.getElementById('report-modal-overlay');
+            const content = document.getElementById('report-modal-content');
+            
+            overlay.classList.add('opacity-0', 'invisible');
+            overlay.classList.remove('opacity-100', 'visible');
+            
+            content.classList.add('scale-95', 'translate-y-5');
+            content.classList.remove('scale-100', 'translate-y-0');
+            
+            setTimeout(() => { 
+                document.body.style.overflow = ''; 
+                document.getElementById('report-form').reset();
+            }, 300);
+        }
+
+        function submitReport(e) {
+            e.preventDefault();
+            
+            const status = document.getElementById('report-status').value;
+            const isLost = status === 'LOST';
+
+            // Format the date
+            const rawDate = document.getElementById('report-date').value;
+            const dateObj = new Date(rawDate);
+            const options = { month: 'short', day: 'numeric', year: 'numeric' };
+            const formattedDate = dateObj.toLocaleDateString('en-US', options);
+
+            // Construct new pet object
+            const newPet = {
+                id: (isLost ? 'L' : 'F') + (Math.floor(Math.random() * 900) + 100),
+                type: document.getElementById('report-type').value,
+                age: document.getElementById('report-age').value || 'Unknown',
+                gender: document.getElementById('report-gender').value,
+                location: document.getElementById('report-location').value,
+                date: formattedDate,
+                description: document.getElementById('report-description').value,
+                phone: document.getElementById('report-phone').value,
+                // Using a generic placeholder image from Unsplash for user uploads
+                image: 'https://images.unsplash.com/photo-1548199973-03cce0bbc87b?auto=format&fit=crop&w=600&q=80' 
+            };
+
+            // Add lost-specific fields
+            if (isLost) {
+                newPet.name = document.getElementById('report-name').value;
+                newPet.breed = document.getElementById('report-breed').value || 'Unknown';
+                lostPets.unshift(newPet);
+                const container = document.getElementById('lost-pets-container');
+                container.insertAdjacentHTML('afterbegin', createPetCard(newPet, 'LOST'));
+            } else {
+                foundPets.unshift(newPet);
+                const container = document.getElementById('found-pets-container');
+                container.insertAdjacentHTML('afterbegin', createPetCard(newPet, 'FOUND'));
+            }
+            
+            // Cleanup
+            closeReportModal();
+        }
+
+        function openModal(petDataStr) {
+            const pet = JSON.parse(decodeURIComponent(petDataStr));
+            const isLost = pet.status === 'LOST';
+
+            // Populate Modal Data
+            document.getElementById('modal-img').src = pet.image;
+            
+            const badge = document.getElementById('modal-status-badge');
+            badge.textContent = pet.status;
+            badge.className = `absolute top-4 left-4 px-4 py-1.5 rounded-full text-xs font-extrabold text-white uppercase tracking-wider shadow-md ${isLost ? 'bg-wp-orange' : 'bg-wp-darkpink'}`;
+
+            document.getElementById('modal-title').textContent = isLost ? pet.name : `Found ${pet.type}`;
+            document.getElementById('modal-location').textContent = pet.location;
+            
+            document.getElementById('modal-type').innerHTML = `${getTypeIcon(pet.type)} ${pet.type}`;
+            document.getElementById('modal-gender').innerHTML = `${getGenderIcon(pet.gender)} ${pet.gender}`;
+            document.getElementById('modal-age').textContent = pet.age;
+            
+            // Handle Breed visibility based on Lost/Found
+            const breedContainer = document.getElementById('breed-container');
+            if (isLost && pet.breed) {
+                breedContainer.style.display = 'block';
+                document.getElementById('modal-breed').textContent = pet.breed;
+            } else {
+                breedContainer.style.display = 'none';
+            }
+
+            document.getElementById('modal-description').textContent = pet.description;
+            document.getElementById('modal-phone').textContent = pet.phone;
+            document.getElementById('modal-phone-link').href = `tel:${pet.phone.replace(/[^0-9+]/g, '')}`;
+
+            // Show Modal
+            document.body.style.overflow = 'hidden'; // Prevent background scrolling
+            document.getElementById('modal-overlay').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('modal-overlay').classList.remove('active');
+            document.body.style.overflow = ''; // Restore scrolling
+        }
+    </script>
+</body>
+</html>
