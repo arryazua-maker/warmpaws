@@ -1,0 +1,273 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#dff7e9">
+<title>WarmPaws — Paw Patrol: Rescue Rush!</title>
+<style>
+:root{--mint:#dff7e9;--mint2:#b9ebd0;--pink:#ffd9e8;--pink2:#ffb9d3;--cream:#fffaf0;--ink:#29453c;--purple:#7965b8;--yellow:#ffe58b;--good:#267a52;--bad:#b44a68}
+*{box-sizing:border-box}
+body{margin:0;font-family:ui-rounded,"Trebuchet MS",system-ui,-apple-system,sans-serif;color:var(--ink);background:radial-gradient(circle at 10% 0%,#fff 0 5%,transparent 30%),linear-gradient(155deg,#e8fff0,#fff0f6 58%,#fff8d9);min-height:100vh}
+button{font:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.app{max-width:720px;margin:auto;padding:16px 14px 28px}
+.topline{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:12px}
+.brand{display:flex;align-items:center;gap:8px;font-weight:1000;letter-spacing:.2px}
+.logo{width:44px;height:44px;display:grid;place-items:center;border-radius:15px;background:#fff;box-shadow:0 4px 0 #b9e6cb;font-size:25px}
+.brand small{display:block;font-size:10px;letter-spacing:1.5px;color:#628576}
+.pill{background:#fff;border:2px solid #d8efdf;border-radius:999px;padding:8px 11px;font-weight:900;font-size:12px;white-space:nowrap}
+.hero{position:relative;overflow:hidden;background:linear-gradient(135deg,#c7f3d8,#fff0f6);border:3px solid white;border-radius:28px;padding:20px 17px 18px;box-shadow:0 7px 0 #c4e8d2;text-align:center}
+.hero:before,.hero:after{content:"🐾";position:absolute;font-size:45px;opacity:.13;transform:rotate(-22deg)}
+.hero:before{left:-4px;top:6px}.hero:after{right:-3px;bottom:1px;transform:rotate(20deg)}
+.eyebrow{font-size:11px;font-weight:1000;letter-spacing:2px;color:#58846e}
+h1{font-size:clamp(28px,8vw,47px);line-height:.98;margin:8px 0 8px;font-weight:1000;letter-spacing:-1.5px}
+h1 span{color:#e46b9a}
+.subtitle{margin:0 auto;max-width:450px;font-size:14px;line-height:1.45}
+.mascots{font-size:clamp(40px,12vw,65px);line-height:1.15;margin:10px 0 6px;filter:drop-shadow(0 3px 0 #fff)}
+.content{margin-top:18px}
+.panel{background:rgba(255,255,255,.88);border:2px solid white;border-radius:23px;padding:17px;box-shadow:0 5px 0 #e1eddf}
+.section-title{font-size:20px;font-weight:1000;margin:0 0 5px}
+.muted{color:#6d897c;font-size:13px;line-height:1.45}
+.levels{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:15px}
+.level{border:2px solid #e0f0e4;border-radius:18px;padding:14px 10px;text-align:left;background:#f5fff7;color:var(--ink);min-height:132px;transition:transform .12s,box-shadow .12s}
+.level:active,.choice:active,.primary:active{transform:scale(.98)}
+.level.inter{background:#fff4f8;border-color:#f9dce7}
+.level .emoji{font-size:29px;display:block;margin-bottom:7px}
+.level strong{display:block;font-size:16px;margin-bottom:4px}
+.level small{font-size:12px;color:#6d897c}
+.primary{width:100%;border:0;border-radius:17px;padding:15px 16px;background:var(--purple);color:#fff;font-weight:1000;box-shadow:0 5px 0 #5f4c9b;margin-top:14px;font-size:16px}
+.primary:disabled{opacity:.45;box-shadow:none;cursor:not-allowed}
+.secondary{border:2px solid #dceee2;background:#fff;color:var(--ink);border-radius:14px;padding:12px 14px;font-weight:900}
+.hud{display:grid;grid-template-columns:1fr auto;gap:9px;align-items:center;margin-bottom:12px}
+.hudbox{background:white;border:2px solid #e3f0e6;border-radius:15px;padding:10px 12px}
+.hudlabel{font-size:10px;font-weight:1000;letter-spacing:1.4px;color:#789587}
+.hudvalue{font-size:22px;font-weight:1000}
+.timer{min-width:104px;text-align:center}
+.track{height:9px;border-radius:20px;background:#eaf3ec;overflow:hidden;margin-top:8px}
+.track>div{height:100%;width:100%;background:linear-gradient(90deg,#7ad6a1,#f7c8db);transition:width .3s linear}
+.question-card{background:#fff;border:3px solid #fff;border-radius:24px;padding:17px;box-shadow:0 5px 0 #e9e4e8}
+.qmeta{display:flex;justify-content:space-between;gap:8px;align-items:center;margin-bottom:8px}
+.tag{font-size:11px;font-weight:1000;letter-spacing:.8px;border-radius:999px;padding:6px 9px;background:#e8f8ee}
+.tag.pink{background:#ffedf4}
+.question-emoji{font-size:55px;text-align:center;margin:4px 0 8px}
+.question{font-size:clamp(19px,5vw,25px);font-weight:1000;line-height:1.16;text-align:center;margin:0 auto 7px;max-width:520px}
+.hint{text-align:center;font-size:12px;color:#7b9287;margin:0 0 13px}
+.choices{display:grid;gap:9px}
+.choice{width:100%;display:flex;align-items:center;gap:11px;text-align:left;padding:12px;border-radius:16px;border:2px solid #e2eee5;background:#fbfffc;color:var(--ink);font-weight:850;line-height:1.25;min-height:62px}
+.choice .letter{flex:0 0 34px;height:34px;display:grid;place-items:center;background:#e8f8ee;border-radius:11px;font-weight:1000}
+.choice.correct{border-color:#78c99b;background:#eafff0}
+.choice.wrong{border-color:#e8a3b7;background:#fff0f4}
+.choice:disabled{cursor:default}
+.feedback{margin-top:12px;border-radius:15px;padding:12px;font-weight:850;font-size:13px;line-height:1.4;background:#f1f8f3}
+.feedback.good{color:var(--good);background:#e9fff0}.feedback.bad{color:var(--bad);background:#fff0f4}
+.result{text-align:center}
+.result-emoji{font-size:66px;margin:4px 0}
+.score-big{font-size:52px;font-weight:1000;line-height:1;margin:7px 0}
+.stars{font-size:27px;letter-spacing:4px;margin:9px}
+.result-title{font-size:26px;font-weight:1000;margin:4px 0}
+.result-actions{display:grid;gap:9px;margin-top:15px}
+.footer{text-align:center;font-size:11px;color:#7b9287;padding:17px 8px 0;line-height:1.5}
+.hidden{display:none!important}
+.pop{animation:pop .28s ease-out}
+@keyframes pop{0%{transform:scale(.94);opacity:.5}100%{transform:scale(1);opacity:1}}
+@media(min-width:560px){.app{padding:22px}.hero{padding:25px}.content{margin-top:20px}.panel{padding:22px}.choices{grid-template-columns:1fr 1fr}.choice:last-child:nth-child(odd){grid-column:1/-1}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="topline">
+    <div class="brand"><div class="logo">🐾</div><div>WarmPaws<small>EVERY PAW DESERVES A SAFE SPACE</small></div></div>
+    <div class="pill">🐱🐶 RESCUE CREW</div>
+  </div>
+  <header class="hero">
+    <div class="eyebrow">THE 60-SECOND RESCUE CHALLENGE</div>
+    <h1>PAW PATROL:<br><span>RESCUE RUSH!</span></h1>
+    <p class="subtitle">Tiny paws need big hearts! Can you make smart, safe choices and become a WarmPaws hero?</p>
+    <div class="mascots">🐱 💗 🐶</div>
+  </header>
+  <main class="content">
+    <section id="home" class="panel">
+      <h2 class="section-title">Pick your rescue mission!</h2>
+      <p class="muted">Choose a level. You have 60 seconds to answer as many as you can. Every correct answer earns 10 Paw Points!</p>
+      <div class="levels">
+        <button class="level" onclick="startGame('easy')"><span class="emoji">🐾</span><strong>Little Paw Hero</strong><small>Easy · Friendly choices</small><small>⏱ 60 seconds</small></button>
+        <button class="level inter" onclick="startGame('inter')"><span class="emoji">🚑</span><strong>Super Rescuer</strong><small>Intermediate · Think fast</small><small>⏱ 60 seconds</small></button>
+      </div>
+      <button class="level" style="width:100%;margin-top:10px;background:#f2efff;border-color:#dcd4ff;min-height:0" onclick="startDash('easy')">
+        <span style="font-size:29px;float:left;margin-right:12px">🏃🐾</span>
+        <strong>NEW! Paw Dash: Hatch Rescue</strong>
+        <small>Action arcade · Collect paw tokens, dodge hazards and reach the Hatch!</small>
+      </button>
+      <button class="primary" onclick="startGame('easy')">LET'S RESCUE! 💖</button>
+      <p class="muted" style="text-align:center;margin:12px 0 0">No sign-up. Just tap, play, and spread kindness.</p>
+    </section>
+
+    <section id="game" class="hidden">
+      <div class="hud">
+        <div class="hudbox"><div class="hudlabel">PAW POINTS</div><div class="hudvalue"><span id="score">0</span> 🐾</div><div class="track"><div id="progress"></div></div></div>
+        <div class="hudbox timer"><div class="hudlabel">TIME LEFT</div><div class="hudvalue"><span id="time">60</span>s</div><div id="roundLabel" class="muted">Question 1</div></div>
+      </div>
+      <div class="question-card pop">
+        <div class="qmeta"><span id="levelTag" class="tag">EASY LEVEL</span><span class="tag pink">+10 per correct</span></div>
+        <div id="qEmoji" class="question-emoji">🐱</div>
+        <h2 id="question" class="question">Question goes here</h2>
+        <p id="hint" class="hint">Choose the kindest safe action!</p>
+        <div id="choices" class="choices"></div>
+        <div id="feedback" class="feedback hidden" role="status" aria-live="polite"></div>
+        <button id="nextBtn" class="primary hidden" onclick="nextQuestion()">NEXT RESCUE ➜</button>
+      </div>
+      <button class="secondary" style="width:100%;margin-top:12px" onclick="goHome()">↩ Exit mission</button>
+    </section>
+
+
+    <section id="dash" class="panel hidden">
+      <div class="hud">
+        <div class="hudbox"><div class="hudlabel">PAW TOKENS</div><div class="hudvalue"><span id="dashScore">0</span> 🐾</div><div class="muted" id="dashGoal">Collect tokens and reach the Hatch!</div></div>
+        <div class="hudbox timer"><div class="hudlabel">TIME LEFT</div><div class="hudvalue"><span id="dashTime">45</span>s</div><div id="dashLevel" class="muted">EASY RUN</div></div>
+      </div>
+      <div style="border:3px solid white;border-radius:22px;overflow:hidden;background:#dff7e9;box-shadow:0 5px 0 #c4e8d2">
+        <canvas id="dashCanvas" width="640" height="420" aria-label="Paw Dash action game" style="display:block;width:100%;height:auto;touch-action:none"></canvas>
+      </div>
+      <p id="dashMessage" class="muted" style="text-align:center;margin:12px 0 8px">Use LEFT and RIGHT. Collect 🐾, dodge hazards, and reach the WarmPaws Hatch!</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:10px">
+        <button id="leftBtn" class="primary" style="margin:0;background:#68b98b;box-shadow:0 5px 0 #39835a;font-size:22px">⬅️ LEFT</button>
+        <button id="rightBtn" class="primary" style="margin:0;background:#e77ca6;box-shadow:0 5px 0 #bb547d;font-size:22px">RIGHT ➡️</button>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px">
+        <button class="secondary" onclick="startDash('easy')">🐣 Easy</button>
+        <button class="secondary" onclick="startDash('inter')">🚀 Intermediate</button>
+      </div>
+      <button class="secondary" style="width:100%;margin-top:10px" onclick="stopDash();goHome()">↩ Exit mission</button>
+    </section>
+
+    <section id="result" class="panel result hidden">
+      <div id="resultEmoji" class="result-emoji">🏆</div>
+      <div class="eyebrow">MISSION COMPLETE!</div>
+      <h2 id="resultTitle" class="result-title">You're a Paw Hero!</h2>
+      <div class="score-big"><span id="finalScore">0</span></div>
+      <div class="muted">PAW POINTS</div>
+      <div id="stars" class="stars">🐾 🐾 🐾</div>
+      <p id="resultText" class="muted">Every kind choice helps make the world safer for animals.</p>
+      <div class="result-actions">
+        <button class="primary" onclick="startGame(currentLevel)">PLAY AGAIN 🔁</button>
+        <button class="secondary" onclick="startGame(currentLevel==='easy'?'inter':'easy')">TRY THE OTHER LEVEL ⭐</button>
+        <button class="secondary" onclick="goHome()">BACK TO START</button>
+      </div>
+      <div style="margin-top:16px;padding:13px;border-radius:16px;background:#effcf3">
+        <strong>💚 You played for a reason!</strong>
+        <p class="muted" style="margin:5px 0 0">WarmPaws connects the public, safe temporary Hatches and rescuers to help organise care for stray cats and dogs.</p>
+      </div>
+    </section>
+  </main>
+  <div class="footer">Made with 💚 by the WarmPaws Rescue Crew · Be kind. Stay safe. Help paws find care.</div>
+</div>
+<script>
+const banks = {
+ easy: [
+  {e:"🌧️🐱",q:"A little kitten is alone in the rain. What should you do?",h:"Choose a safe way to get help.",a:["Ignore it and walk away","Tell a trusted adult or animal rescuer","Chase it so you can catch it"],c:1,why:"Yes! Ask a trusted adult or rescuer for help. A frightened animal may run or scratch."},
+  {e:"🐶💧",q:"A stray dog looks thirsty. What's a kind next step?",h:"Think safe and sensible.",a:["Ask an adult or rescuer to help provide water safely","Force the dog to drink","Run up and hug it"],c:0,why:"Great choice! Let an adult or rescuer decide how to help safely."},
+  {e:"📣🐾",q:"You spot an injured cat near a road. What now?",h:"Your safety matters too!",a:["Pick it up by yourself","Move into traffic to reach it","Stay at a safe distance and alert an adult or rescuer"],c:2,why:"Correct! Keep safe and get help from a trusted adult or trained rescuer."},
+  {e:"🏡🐱",q:"A friendly stray cat needs a safe place. What can WarmPaws help people find?",h:"Think about the WarmPaws public app.",a:["A nearby WarmPaws Hatch location","A cat costume shop","A swimming pool"],c:0,why:"Purr-fect! The WarmPaws app helps people locate nearby Hatches."},
+  {e:"🪪🐶",q:"You find a pet that may be lost. What is a helpful action?",h:"Someone might be missing their friend.",a:["Keep it a secret","Ask an adult to check for lost-pet information","Give it to the first stranger you see"],c:1,why:"That's it! A trusted adult can help check Lost & Found information and contact the right people."},
+  {e:"💗🐱🐶",q:"What's one way to help stray animals for the long term?",h:"Think beyond one day.",a:["Encourage responsible care and adoption","Leave food beside a busy road","Bring every animal home without asking"],c:0,why:"Amazing! Responsible care, rescue and adoption help animals in the long run."},
+  {e:"🩺🐾",q:"Who should assess an injured animal's health?",h:"Some jobs need special training.",a:["A trained veterinarian or appropriate animal-care professional","A child alone","A random passer-by"],c:0,why:"Correct! A vet or qualified animal-care professional can assess the animal."}
+ ],
+ inter: [
+  {e:"🚗🐶",q:"An injured dog is beside a busy road. What is the safest first move?",h:"Choose the best rescue plan.",a:["Rush into the road to grab it","Stay well clear and alert a trusted adult or trained rescuer","Shout and chase the dog"],c:1,why:"Right! Keep people safe, avoid frightening the dog, and contact trained help."},
+  {e:"🏷️🐱",q:"A rescued cat is placed in a WarmPaws Hatch. What detail helps rescuers track the case?",h:"Think like WarmPaws HQ!",a:["A unique ID, Hatch location and placement time","The rescuer's favourite colour","A made-up pet name only"],c:0,why:"Exactly! A unique ID, location and time help HQ organise the rescue record."},
+  {e:"🤒🐱",q:"A rescued kitten seems weak and unwell. What should happen next?",h:"Care comes before guessing.",a:["Give it random medicine","Wait for social media comments","Arrange assessment by a veterinarian or qualified rescuer"],c:2,why:"Correct! Qualified animal-care professionals can assess what treatment is needed."},
+  {e:"🏠🐶",q:"A family wants to adopt a rescued dog. What's a responsible next step?",h:"A forever home is a big promise.",a:["Check the family's readiness and follow the adoption process","Give the dog away without any questions","Choose only by the dog's colour"],c:0,why:"Great thinking! Responsible adoption checks help match pets with prepared caregivers."},
+  {e:"🐈‍⬛🔎",q:"A cat has a collar and may be lost. Which WarmPaws feature is relevant?",h:"Pick the feature that reconnects pets and people.",a:["Merchandise shop","Lost & Found","Hatch timer only"],c:1,why:"Yes! Lost & Found can help people share and check missing-pet information."},
+  {e:"🐱🐶✂️",q:"How can communities help reduce future stray populations humanely?",h:"Think long-term and responsible.",a:["Abandon animals far away","Use responsible rehoming and consult vets about suitable neutering/TNR","Ignore every unowned animal"],c:1,why:"That's the idea! Responsible rehoming and vet-guided TNR/neutering can help manage stray populations humanely."},
+  {e:"🔔🏢",q:"A Hatch alert reaches WarmPaws HQ. What should the team do?",h:"A notification is the start of organised care.",a:["Coordinate an appropriate response and record the case","Delete the alert without checking","Post private details publicly"],c:0,why:"Correct! HQ helps rescuers coordinate and keep organised records while respecting privacy."},
+  {e:"🧤🐕",q:"A frightened dog growls when people approach. What's the safest choice?",h:"A scared animal may react defensively.",a:["Corner it and grab its collar","Keep distance and contact trained animal rescuers","Let children surround it"],c:1,why:"Absolutely. Give the dog space and let trained rescuers handle the situation."}
+ ]
+};
+let currentLevel="easy", questions=[], index=0, score=0, timeLeft=60, timer=null, locked=false, answered=0;
+function shuffle(arr){return [...arr].sort(()=>Math.random()-.5)}
+function show(id){["home","game","dash","result"].forEach(x=>document.getElementById(x).classList.toggle("hidden",x!==id))}
+function startGame(level){
+ clearInterval(timer);currentLevel=level;questions=shuffle(banks[level]);index=0;score=0;timeLeft=60;locked=false;answered=0;
+ document.getElementById("score").textContent=score;document.getElementById("time").textContent=timeLeft;
+ document.getElementById("levelTag").textContent=level==="easy"?"EASY LEVEL · LITTLE PAW HERO":"INTERMEDIATE · SUPER RESCUER";
+ show("game");renderQuestion();
+ timer=setInterval(()=>{timeLeft--;document.getElementById("time").textContent=timeLeft;document.getElementById("progress").style.width=(timeLeft/60*100)+"%";if(timeLeft<=10)document.getElementById("time").style.color="#c34e71";if(timeLeft<=0)finishGame()},1000);
+}
+function renderQuestion(){
+ if(index>=questions.length){questions=shuffle(banks[currentLevel]);index=0}
+ locked=false;const q=questions[index];
+ document.getElementById("roundLabel").textContent="Question "+(answered+1);
+ document.getElementById("qEmoji").textContent=q.e;document.getElementById("question").textContent=q.q;document.getElementById("hint").textContent=q.h;
+ document.getElementById("feedback").className="feedback hidden";document.getElementById("nextBtn").classList.add("hidden");
+ const holder=document.getElementById("choices");holder.innerHTML="";
+ q.a.forEach((a,i)=>{const b=document.createElement("button");b.className="choice";b.innerHTML='<span class="letter">'+String.fromCharCode(65+i)+'</span><span>'+a+'</span>';b.onclick=()=>choose(i,b);holder.appendChild(b)});
+}
+function choose(i,button){
+ if(locked||timeLeft<=0)return;locked=true;answered++;const q=questions[index];const buttons=[...document.querySelectorAll(".choice")];buttons.forEach((b,j)=>{b.disabled=true;if(j===q.c)b.classList.add("correct")});
+ const fb=document.getElementById("feedback");
+ if(i===q.c){score+=10;document.getElementById("score").textContent=score;fb.className="feedback good";fb.textContent="✨ +10 PAW POINTS! "+q.why}
+ else{button.classList.add("wrong");fb.className="feedback bad";fb.textContent="🐾 Good try! "+q.why}
+ document.getElementById("nextBtn").classList.remove("hidden");document.getElementById("nextBtn").textContent=timeLeft<=4?"SEE SCORE ➜":"NEXT RESCUE ➜";
+}
+function nextQuestion(){if(timeLeft<=0){finishGame();return}index++;renderQuestion()}
+function finishGame(){
+ clearInterval(timer);document.getElementById("time").textContent=Math.max(0,timeLeft);show("result");
+ document.getElementById("finalScore").textContent=score;
+ let title,emoji,stars,txt;
+ if(score>=60){title="Legendary Paw Hero!";emoji="🏆";stars="🐾 🐾 🐾";txt="Incredible rescue instincts! You made lots of thoughtful, safe choices."}
+ else if(score>=30){title="Super Rescue Buddy!";emoji="🌟";stars="🐾 🐾";txt="You're learning how to help paws in need. Keep that kindness going!"}
+ else{title="Kindness Rookie!";emoji="💗";stars="🐾";txt="Every hero starts somewhere. Keep learning safe ways to help animals!"}
+ document.getElementById("resultTitle").textContent=title;document.getElementById("resultEmoji").textContent=emoji;document.getElementById("stars").textContent=stars;document.getElementById("resultText").textContent=txt;
+}
+function goHome(){clearInterval(timer);stopDash();document.getElementById("time").style.color="";document.getElementById("progress").style.width="100%";show("home")}
+
+// Paw Dash: mobile-friendly action arcade
+let dashRAF=null,dashLast=0,dashStarted=0,dashDuration=45,dashRemaining=45;
+let dashLevelNow="easy",dashPoints=0,dashPlayer={x:300,y:342,w:42,h:42},dashItems=[],dashHeld={left:false,right:false},dashEnded=false;
+const dashCanvas=document.getElementById("dashCanvas"),dashCtx=dashCanvas.getContext("2d");
+function stopDash(){if(dashRAF)cancelAnimationFrame(dashRAF);dashRAF=null;dashHeld.left=false;dashHeld.right=false}
+function startDash(level){
+ clearInterval(timer);stopDash();dashLevelNow=level;dashDuration=level==="easy"?45:60;dashRemaining=dashDuration;dashPoints=0;dashEnded=false;
+ dashPlayer={x:300,y:342,w:42,h:42};dashItems=[];document.getElementById("dashScore").textContent="0";document.getElementById("dashTime").textContent=dashRemaining;
+ document.getElementById("dashLevel").textContent=level==="easy"?"EASY RUN":"SUPER RUN";
+ document.getElementById("dashGoal").textContent=level==="easy"?"Collect 8 paw tokens!":"Collect 12 paw tokens!";
+ document.getElementById("dashMessage").textContent="Hold LEFT and RIGHT to move. Collect 🐾, dodge hazards and reach safety!";
+ show("dash");dashLast=performance.now();dashStarted=dashLast;dashRAF=requestAnimationFrame(dashLoop);
+}
+function dashLoop(now){
+ if(dashEnded)return;const dt=Math.min((now-dashLast)/1000,.04);dashLast=now;
+ dashRemaining=Math.max(0,dashDuration-(now-dashStarted)/1000);document.getElementById("dashTime").textContent=Math.ceil(dashRemaining);
+ const speed=dashLevelNow==="easy"?240:300;if(dashHeld.left)dashPlayer.x-=speed*dt;if(dashHeld.right)dashPlayer.x+=speed*dt;
+ dashPlayer.x=Math.max(8,Math.min(590,dashPlayer.x));
+ if(Math.random()<(dashLevelNow==="easy"?.045:.075)){const token=Math.random()<(dashLevelNow==="easy"?.68:.52),lanes=[60,160,260,360,460,560];dashItems.push({x:lanes[Math.floor(Math.random()*lanes.length)],y:-25,size:30,token,emoji:token?"🐾":(Math.random()<.5?"🪨":"💧"),v:(dashLevelNow==="easy"?115:165)+Math.random()*(dashLevelNow==="easy"?55:95)})}
+ for(const item of dashItems)item.y+=item.v*dt;
+ for(const item of dashItems){if(item.hit)continue;const dx=(item.x+15)-(dashPlayer.x+21),dy=(item.y+15)-(dashPlayer.y+21);
+  if(Math.abs(dx)<31&&Math.abs(dy)<34){item.hit=true;if(item.token){dashPoints++;document.getElementById("dashMessage").textContent="Yay! Paw token collected! Keep going! 💚"}else{dashPoints=Math.max(0,dashPoints-1);document.getElementById("dashMessage").textContent="Oops! You bumped a hazard. Keep moving safely! 🐾"}document.getElementById("dashScore").textContent=dashPoints}}
+ dashItems=dashItems.filter(i=>i.y<450&&!i.hit);drawDash();const goal=dashLevelNow==="easy"?8:12;
+ if(dashPoints>=goal){finishDash(true);return}if(dashRemaining<=0){finishDash(false);return}dashRAF=requestAnimationFrame(dashLoop)
+}
+function drawDash(){
+ const c=dashCtx;c.clearRect(0,0,640,420);c.fillStyle="#dff7e9";c.fillRect(0,0,640,420);c.fillStyle="#b9ebd0";c.fillRect(0,0,640,70);c.fillStyle="#fffaf0";c.fillRect(24,0,592,420);c.fillStyle="#e9f4ec";c.fillRect(45,0,550,420);
+ c.fillStyle="#d1ead9";for(let y=0;y<420;y+=70)c.fillRect(50,y,540,2);
+ c.fillStyle="#fff";c.strokeStyle="#8acba5";c.lineWidth=3;c.beginPath();c.moveTo(229,7);c.lineTo(411,7);c.quadraticCurveTo(425,7,425,21);c.lineTo(425,45);c.quadraticCurveTo(425,59,411,59);c.lineTo(229,59);c.quadraticCurveTo(215,59,215,45);c.lineTo(215,21);c.quadraticCurveTo(215,7,229,7);c.closePath();c.fill();c.stroke();
+ c.font="bold 19px system-ui";c.textAlign="center";c.fillStyle="#29453c";c.fillText("🏠 WARMPAWS HATCH",320,39);
+ c.strokeStyle="#a5d8b8";c.lineWidth=3;c.setLineDash([12,12]);c.beginPath();[190,320,450].forEach(x=>{c.moveTo(x,75);c.lineTo(x,415)});c.stroke();c.setLineDash([]);
+ c.font="25px system-ui";c.fillText("🌳",20,34);c.fillText("🌳",620,34);c.fillText("🌼",20,115);c.fillText("🌼",620,195);
+ for(const item of dashItems){c.font="29px system-ui";c.fillText(item.emoji,item.x,item.y+24)}
+ c.beginPath();c.fillStyle="#fff";c.arc(dashPlayer.x+21,dashPlayer.y+22,26,0,Math.PI*2);c.fill();c.font="36px system-ui";c.fillText("🐶",dashPlayer.x+21,dashPlayer.y+34);
+ c.font="bold 13px system-ui";c.fillStyle="#4d7864";c.fillText("RESCUE PUP",dashPlayer.x+21,dashPlayer.y+58);c.font="15px system-ui";c.fillStyle="#678b78";c.fillText("COLLECT PAWS • AVOID HAZARDS • REACH SAFETY",320,405)
+}
+function finishDash(won){
+ dashEnded=true;stopDash();const goal=dashLevelNow==="easy"?8:12;
+ document.getElementById("dashMessage").textContent=won?"🎉 RESCUE COMPLETE! You reached the WarmPaws Hatch!":"Time's up! You collected "+dashPoints+" paw tokens. Try again and aim for "+goal+"!";
+ const c=dashCtx;c.fillStyle="rgba(255,250,240,.93)";c.fillRect(50,125,540,160);c.textAlign="center";c.font="48px system-ui";c.fillText(won?"🏆":"💗",320,185);c.fillStyle="#29453c";c.font="bold 28px system-ui";c.fillText(won?"PAW-SOME RESCUE!":"GOOD TRY, HERO!",320,225);c.font="bold 17px system-ui";c.fillText("Paw tokens: "+dashPoints+" / "+goal,320,257)
+}
+function bindDashButton(id,dir){const el=document.getElementById(id);const down=e=>{e.preventDefault();dashHeld[dir]=true},up=e=>{e.preventDefault();dashHeld[dir]=false};el.addEventListener("pointerdown",down);el.addEventListener("pointerup",up);el.addEventListener("pointerleave",up);el.addEventListener("pointercancel",up)}
+bindDashButton("leftBtn","left");bindDashButton("rightBtn","right");
+window.addEventListener("keydown",e=>{if(e.key==="ArrowLeft"||e.key.toLowerCase()==="a")dashHeld.left=true;if(e.key==="ArrowRight"||e.key.toLowerCase()==="d")dashHeld.right=true});
+window.addEventListener("keyup",e=>{if(e.key==="ArrowLeft"||e.key.toLowerCase()==="a")dashHeld.left=false;if(e.key==="ArrowRight"||e.key.toLowerCase()==="d")dashHeld.right=false});
+
+</script>
+</body>
+</html>
